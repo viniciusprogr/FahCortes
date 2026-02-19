@@ -8,6 +8,7 @@ import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -48,6 +49,11 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
         // 2. Se encontrar, converte para Domínio (Usuario). Se não, retorna Optional vazio.
         return usuarioEntity.map(entity -> usuarioMapper.toDomain(entity));
+    }
+
+    @Override
+    public List<Usuario> ListarTodos() {
+        return usuarioRepository.findAll().stream().map(usuarioMapper::toDomain).toList();
     }
 
 }

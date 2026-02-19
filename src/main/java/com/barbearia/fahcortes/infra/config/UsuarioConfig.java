@@ -2,7 +2,7 @@ package com.barbearia.fahcortes.infra.config;
 
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
 import com.barbearia.fahcortes.domain.usecases.usuario.CadastrarUsuarioUseCase;
-import com.barbearia.fahcortes.domain.usecases.usuario.RemoverUsuarioUseCase;
+import com.barbearia.fahcortes.domain.usecases.usuario.ListarTodosUsuariosUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,7 +15,13 @@ public class UsuarioConfig {
         return new CadastrarUsuarioUseCase(usuarioGateway);
     }
 
+    @Bean
     public RemoverUsuarioUseCase removerUsuarioUseCase(UsuarioGateway usuarioGateway){
         return new RemoverUsuarioUseCase(usuarioGateway);
+    }
+
+    @Bean
+    public ListarTodosUsuariosUseCase listarTodosUsuariosUseCase(UsuarioGateway usuarioGateway){
+        return new ListarTodosUsuariosUseCase(usuarioGateway);
     }
 }

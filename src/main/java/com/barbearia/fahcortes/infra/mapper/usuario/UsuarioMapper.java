@@ -7,6 +7,8 @@ import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -36,6 +38,10 @@ public class UsuarioMapper {
         );
     }
 
+    public UsuarioResponseDto toResponseDto(Usuario usuario){
+        return modelMapper.map(usuario, UsuarioResponseDto.class);
+    }
+
     public Usuario requestToDomain(UsuarioRequestDto usuarioResquestDto) {
         return modelMapper.map(usuarioResquestDto, Usuario.class);
     }
@@ -44,7 +50,9 @@ public class UsuarioMapper {
         return modelMapper.map(usuario, UsuarioResponseDto.class);
     }
 
-
+    public List<UsuarioResponseDto> toResponseDtoList(List<Usuario> usuarios){
+        return usuarios.stream().map(this::toResponseDto).toList();
+    }
     // entity
 
     public UsuarioResponseDto EntityToResponse(Optional<UsuarioEntity> usuarioEntity) {
