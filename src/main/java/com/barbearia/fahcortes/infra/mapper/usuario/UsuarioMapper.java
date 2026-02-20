@@ -7,9 +7,7 @@ import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class UsuarioMapper {
@@ -18,6 +16,16 @@ public class UsuarioMapper {
 
     public UsuarioMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+    }
+
+
+    public Usuario toDomain(UsuarioEntity usuarioEntity){
+        return new Usuario(
+                usuarioEntity.getId(),
+                usuarioEntity.getNome(),
+                usuarioEntity.getEmail(),
+                usuarioEntity.getSenha()
+        );
     }
 
     public UsuarioEntity toEntity(Usuario usuario){
@@ -29,33 +37,24 @@ public class UsuarioMapper {
         );
     }
 
-    public Usuario toDomain(UsuarioEntity usuarioEntity){
+    public Usuario toDomain(UsuarioRequestDto usuarioRequestDto){
         return new Usuario(
-                usuarioEntity.getId(),
-                usuarioEntity.getNome(),
-                usuarioEntity.getEmail(),
-                usuarioEntity.getSenha()
+                null,
+                usuarioRequestDto.getNome(),
+                usuarioRequestDto.getEmail(),
+                usuarioRequestDto.getSenha()
         );
     }
 
-    public UsuarioResponseDto toResponseDto(Usuario usuario){
-        return modelMapper.map(usuario, UsuarioResponseDto.class);
-    }
-
-    public Usuario requestToDomain(UsuarioRequestDto usuarioResquestDto) {
-        return modelMapper.map(usuarioResquestDto, Usuario.class);
-    }
-
-    public UsuarioResponseDto DomainToResponse(Usuario usuario) {
+    public UsuarioResponseDto toResponse(Usuario usuario) {
         return modelMapper.map(usuario, UsuarioResponseDto.class);
     }
 
     public List<UsuarioResponseDto> toResponseDtoList(List<Usuario> usuarios){
-        return usuarios.stream().map(this::toResponseDto).toList();
+        return usuarios.stream().map(this::toResponse).toList();
     }
+
     // entity
 
-    public UsuarioResponseDto EntityToResponse(Optional<UsuarioEntity> usuarioEntity) {
-        return modelMapper.map(usuarioEntity, UsuarioResponseDto.class);
-    }
 }
+
