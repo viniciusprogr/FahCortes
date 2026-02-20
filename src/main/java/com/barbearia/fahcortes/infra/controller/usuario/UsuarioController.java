@@ -3,6 +3,7 @@ package com.barbearia.fahcortes.infra.controller.usuario;
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
 import com.barbearia.fahcortes.domain.usecases.usuario.BuscarUsuarioPorIdUseCase;
 import com.barbearia.fahcortes.domain.usecases.usuario.CadastrarUsuarioUseCase;
+import com.barbearia.fahcortes.domain.usecases.usuario.DeletarUsuarioPorIdUseCase;
 import com.barbearia.fahcortes.domain.usecases.usuario.ListarTodosUsuariosUseCase;
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioResponseDto;
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioRequestDto;
@@ -20,13 +21,15 @@ public class UsuarioController {
     private final CadastrarUsuarioUseCase cadastrarUsuarioUseCase;
     private final ListarTodosUsuariosUseCase listarTodosUsuariosUseCase;
     private final BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase;
+    private final DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase;
 
 
-    public UsuarioController(UsuarioMapper usuarioMapper, CadastrarUsuarioUseCase cadastrarUsuarioUseCase, ListarTodosUsuariosUseCase listarTodosUsuariosUseCase, BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase) {
+    public UsuarioController(UsuarioMapper usuarioMapper, CadastrarUsuarioUseCase cadastrarUsuarioUseCase, ListarTodosUsuariosUseCase listarTodosUsuariosUseCase, BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase, DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase) {
         this.usuarioMapper = usuarioMapper;
         this.cadastrarUsuarioUseCase = cadastrarUsuarioUseCase;
         this.listarTodosUsuariosUseCase = listarTodosUsuariosUseCase;
         this.buscarUsuarioPorIdUseCase = buscarUsuarioPorIdUseCase;
+        this.deletarUsuarioPorIdUseCase = deletarUsuarioPorIdUseCase;
     }
 
     @PostMapping
@@ -46,6 +49,11 @@ public class UsuarioController {
     public List<UsuarioResponseDto> listarTodos(){
         List<Usuario> listaDeUsuario = listarTodosUsuariosUseCase.execute();
         return usuarioMapper.toResponseDtoList(listaDeUsuario);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletarUsuario(@PathVariable Long id){
+        deletarUsuarioPorIdUseCase.execute(id);
     }
 
 
