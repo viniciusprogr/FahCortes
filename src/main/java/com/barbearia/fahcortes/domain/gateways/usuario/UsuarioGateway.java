@@ -13,7 +13,7 @@ public interface UsuarioGateway {
 
     void removerUsuario(Long id);
 
-    UsuarioResponseDto buscarPorId(Long id);
+    Usuario buscarPorId(Long id);
 
     Optional<Usuario> buscarPorEmail(String email);
 

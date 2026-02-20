@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.gateways;
 
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
+import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioRequestDto;
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioResponseDto;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Component
 public class UsuarioGatewayImp implements UsuarioGateway {
@@ -22,7 +25,6 @@ public class UsuarioGatewayImp implements UsuarioGateway {
         this.usuarioMapper = usuarioMapper;
     }
 
-
     @Override
     public Usuario cadastrarUsuario(Usuario usuario) {
         UsuarioEntity entity = usuarioMapper.toEntity(usuario);
@@ -32,28 +34,27 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
     @Override
     public void removerUsuario(Long id) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findById(id).get();
-        usuarioRepository.delete(usuarioEntity);
+        if(!usuarioRepository.existsById(id)){
+            throw new IllegalArgumentException("Não existe usuario com o id: " + id );
+        }
+        usuarioRepository.deleteById(id);
     }
 
     @Override
-    public UsuarioResponseDto buscarPorId(Long id) {
-       Optional<UsuarioEntity> usuarioEntity = usuarioRepository.findById(id);
-        return usuarioMapper.EntityToResponse(usuarioEntity);
+    public Usuario buscarPorId(Long id) {
+       return usuarioRepository.findById(id).map(usuarioMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Usuario com id não encontrado"));
     }
+
 
     @Override
     public Optional<Usuario> buscarPorEmail(String email) {
-        // 1. Busca a Entity no banco
-        Optional<UsuarioEntity> usuarioEntity = usuarioRepository.findByEmail(email);
-
-        // 2. Se encontrar, converte para Domínio (Usuario). Se não, retorna Optional vazio.
-        return usuarioEntity.map(entity -> usuarioMapper.toDomain(entity));
+        return Optional.empty();
     }
+
 
     @Override
     public List<Usuario> ListarTodos() {
-        return usuarioRepository.findAll().stream().map(usuarioMapper::toDomain).toList();
+        return usuarioRepository.findAll().stream().map(usuarioMapper::toDomain).collect(Collectors.toList());
     }
 
 }
