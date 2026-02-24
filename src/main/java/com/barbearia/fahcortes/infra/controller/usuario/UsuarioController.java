@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -20,15 +21,17 @@ public class UsuarioController {
     private final BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase;
     private final DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase;
     private final AtualizarUsuarioPorIdUseCase atualizarUsuarioPeloIdUseCase;
+    private final BuscarUsuarioPorEmailUseCase buscarUsuarioPorEmailUseCase;
 
 
-    public UsuarioController(UsuarioMapper usuarioMapper, CadastrarUsuarioUseCase cadastrarUsuarioUseCase, ListarTodosUsuariosUseCase listarTodosUsuariosUseCase, BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase, DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase, AtualizarUsuarioPorIdUseCase atualizarUsuarioPeloIdUseCase) {
+    public UsuarioController(UsuarioMapper usuarioMapper, CadastrarUsuarioUseCase cadastrarUsuarioUseCase, ListarTodosUsuariosUseCase listarTodosUsuariosUseCase, BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase, DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase, AtualizarUsuarioPorIdUseCase atualizarUsuarioPeloIdUseCase, BuscarUsuarioPorEmailUseCase buscarUsuarioPorEmailUseCase) {
         this.usuarioMapper = usuarioMapper;
         this.cadastrarUsuarioUseCase = cadastrarUsuarioUseCase;
         this.listarTodosUsuariosUseCase = listarTodosUsuariosUseCase;
         this.buscarUsuarioPorIdUseCase = buscarUsuarioPorIdUseCase;
         this.deletarUsuarioPorIdUseCase = deletarUsuarioPorIdUseCase;
         this.atualizarUsuarioPeloIdUseCase = atualizarUsuarioPeloIdUseCase;
+        this.buscarUsuarioPorEmailUseCase = buscarUsuarioPorEmailUseCase;
     }
 
     @PostMapping
@@ -44,6 +47,11 @@ public class UsuarioController {
         return usuarioMapper.toResponse(usuario);
     }
 
+    @GetMapping("/email")
+    public UsuarioResponseDto buscarPorEmail(@RequestParam String email){
+        Usuario usuario = buscarUsuarioPorEmailUseCase.execute(email);
+        return usuarioMapper.toResponse(usuario);
+    }
     @GetMapping
     public List<UsuarioResponseDto> listarTodos(){
         List<Usuario> listaDeUsuario = listarTodosUsuariosUseCase.execute();

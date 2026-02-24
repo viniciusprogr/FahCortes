@@ -33,4 +33,9 @@ public class UsuarioConfig {
     public AtualizarUsuarioPorIdUseCase atualizarUsuarioPeloIdUseCase(UsuarioGateway usuarioGateway){
         return new AtualizarUsuarioPorIdUseCase(usuarioGateway);
     }
+
+    @Bean
+    public BuscarUsuarioPorEmailUseCase buscarUsuarioPorEmailUseCase(UsuarioGateway usuarioGateway){
+        return new BuscarUsuarioPorEmailUseCase(usuarioGateway);
+    }
 }

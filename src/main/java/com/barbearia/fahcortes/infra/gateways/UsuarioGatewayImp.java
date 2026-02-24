@@ -24,6 +24,9 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
     @Override
     public Usuario cadastrarUsuario(Usuario usuario) {
+        if (usuarioRepository.existsByEmail(usuario.getEmail())){
+            throw new IllegalArgumentException("usuario ja existe com o email: " + usuario.getEmail() + "");
+        }
         UsuarioEntity entity = usuarioMapper.toEntity(usuario);
         usuarioRepository.save(entity);
         return usuarioMapper.toDomain(entity);
@@ -44,8 +47,8 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
 
     @Override
-    public Optional<Usuario> buscarPorEmail(String email) {
-        return Optional.empty();
+    public Usuario buscarPorEmail(String email) {
+        return usuarioRepository.findByEmail(email).map(usuarioMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("usuario com: " + email));
     }
 
 
