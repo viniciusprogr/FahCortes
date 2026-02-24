@@ -18,4 +18,6 @@ public interface UsuarioGateway {
     Optional<Usuario> buscarPorEmail(String email);
 
     List<Usuario> ListarTodos();
+
+    Usuario atualizarUsuario(Usuario usuario, Long id);
 }

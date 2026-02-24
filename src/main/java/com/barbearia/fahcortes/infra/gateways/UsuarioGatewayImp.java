@@ -2,8 +2,6 @@ package com.barbearia.fahcortes.infra.gateways;
 
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
-import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioRequestDto;
-import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioResponseDto;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Component
@@ -55,6 +52,16 @@ public class UsuarioGatewayImp implements UsuarioGateway {
     @Override
     public List<Usuario> ListarTodos() {
         return usuarioRepository.findAll().stream().map(usuarioMapper::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public Usuario atualizarUsuario(Usuario usuario, Long id) {
+      UsuarioEntity usuarioEntity = usuarioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuario com id :" + id + "não encontrado"));
+
+      usuarioEntity.setNome(usuario.getNome());
+      usuarioEntity.setEmail(usuario.getEmail());
+      usuarioEntity.setSenha(usuario.getSenha());
+      return usuarioMapper.toDomain(usuarioRepository.save(usuarioEntity));
     }
 
 }
