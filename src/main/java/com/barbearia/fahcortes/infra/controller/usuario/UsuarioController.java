@@ -6,6 +6,8 @@ import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioResponseDto;
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioRequestDto;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,38 +37,39 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public UsuarioResponseDto CadastrarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioResquestDto){
+    public ResponseEntity<UsuarioResponseDto> CadastrarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioResquestDto){
         Usuario usuario = usuarioMapper.toDomain(usuarioResquestDto);
         Usuario usuarioSalvo =cadastrarUsuarioUseCase.execute(usuario);
-        return usuarioMapper.toResponse(usuarioSalvo);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(usuarioMapper.toResponse(usuarioSalvo));
     }
 
     @GetMapping("/{id}")
-    public UsuarioResponseDto buscarPorId(@PathVariable Long id){
+    public ResponseEntity<UsuarioResponseDto> buscarPorId(@PathVariable Long id){
         Usuario usuario = buscarUsuarioPorIdUseCase.execute(id);
-        return usuarioMapper.toResponse(usuario);
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioMapper.toResponse(usuario));
     }
 
     @GetMapping("/email")
-    public UsuarioResponseDto buscarPorEmail(@RequestParam String email){
+    public ResponseEntity<UsuarioResponseDto> buscarPorEmail(@RequestParam String email){
         Usuario usuario = buscarUsuarioPorEmailUseCase.execute(email);
-        return usuarioMapper.toResponse(usuario);
+        return ResponseEntity.ok(usuarioMapper.toResponse(usuario));
     }
     @GetMapping
-    public List<UsuarioResponseDto> listarTodos(){
+    public ResponseEntity<List<UsuarioResponseDto>> listarTodos(){
         List<Usuario> listaDeUsuario = listarTodosUsuariosUseCase.execute();
-        return usuarioMapper.toResponseDtoList(listaDeUsuario);
+        return ResponseEntity.ok(usuarioMapper.toResponseDtoList(listaDeUsuario));
     }
 
     @DeleteMapping("/{id}")
-    public void deletarUsuario(@PathVariable Long id){
+    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id){
         deletarUsuarioPorIdUseCase.execute(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public UsuarioResponseDto atualizarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioRequestDto, @PathVariable Long id){
+    public ResponseEntity<UsuarioResponseDto> atualizarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioRequestDto, @PathVariable Long id){
         Usuario usuario = usuarioMapper.toDomain(usuarioRequestDto);
         Usuario usuarioAtualizado = atualizarUsuarioPeloIdUseCase.execute(usuario, id);
-        return usuarioMapper.toResponse(usuarioAtualizado);
+        return ResponseEntity.ok(usuarioMapper.toResponse(usuarioAtualizado));
     }
 }
