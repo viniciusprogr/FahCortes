@@ -1,13 +1,11 @@
 package com.barbearia.fahcortes.infra.controller.usuario;
 
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
-import com.barbearia.fahcortes.domain.usecases.usuario.BuscarUsuarioPorIdUseCase;
-import com.barbearia.fahcortes.domain.usecases.usuario.CadastrarUsuarioUseCase;
-import com.barbearia.fahcortes.domain.usecases.usuario.DeletarUsuarioPorIdUseCase;
-import com.barbearia.fahcortes.domain.usecases.usuario.ListarTodosUsuariosUseCase;
+import com.barbearia.fahcortes.domain.usecases.usuario.*;
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioResponseDto;
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.UsuarioRequestDto;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,18 +20,22 @@ public class UsuarioController {
     private final ListarTodosUsuariosUseCase listarTodosUsuariosUseCase;
     private final BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase;
     private final DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase;
+    private final AtualizarUsuarioPorIdUseCase atualizarUsuarioPeloIdUseCase;
+    private final BuscarUsuarioPorEmailUseCase buscarUsuarioPorEmailUseCase;
 
 
-    public UsuarioController(UsuarioMapper usuarioMapper, CadastrarUsuarioUseCase cadastrarUsuarioUseCase, ListarTodosUsuariosUseCase listarTodosUsuariosUseCase, BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase, DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase) {
+    public UsuarioController(UsuarioMapper usuarioMapper, CadastrarUsuarioUseCase cadastrarUsuarioUseCase, ListarTodosUsuariosUseCase listarTodosUsuariosUseCase, BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase, DeletarUsuarioPorIdUseCase deletarUsuarioPorIdUseCase, AtualizarUsuarioPorIdUseCase atualizarUsuarioPeloIdUseCase, BuscarUsuarioPorEmailUseCase buscarUsuarioPorEmailUseCase) {
         this.usuarioMapper = usuarioMapper;
         this.cadastrarUsuarioUseCase = cadastrarUsuarioUseCase;
         this.listarTodosUsuariosUseCase = listarTodosUsuariosUseCase;
         this.buscarUsuarioPorIdUseCase = buscarUsuarioPorIdUseCase;
         this.deletarUsuarioPorIdUseCase = deletarUsuarioPorIdUseCase;
+        this.atualizarUsuarioPeloIdUseCase = atualizarUsuarioPeloIdUseCase;
+        this.buscarUsuarioPorEmailUseCase = buscarUsuarioPorEmailUseCase;
     }
 
     @PostMapping
-    public UsuarioResponseDto CadastrarUsuario(@RequestBody UsuarioRequestDto usuarioResquestDto){
+    public UsuarioResponseDto CadastrarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioResquestDto){
         Usuario usuario = usuarioMapper.toDomain(usuarioResquestDto);
         Usuario usuarioSalvo =cadastrarUsuarioUseCase.execute(usuario);
         return usuarioMapper.toResponse(usuarioSalvo);
@@ -45,6 +47,11 @@ public class UsuarioController {
         return usuarioMapper.toResponse(usuario);
     }
 
+    @GetMapping("/email")
+    public UsuarioResponseDto buscarPorEmail(@RequestParam String email){
+        Usuario usuario = buscarUsuarioPorEmailUseCase.execute(email);
+        return usuarioMapper.toResponse(usuario);
+    }
     @GetMapping
     public List<UsuarioResponseDto> listarTodos(){
         List<Usuario> listaDeUsuario = listarTodosUsuariosUseCase.execute();
@@ -56,5 +63,10 @@ public class UsuarioController {
         deletarUsuarioPorIdUseCase.execute(id);
     }
 
-
+    @PutMapping("/{id}")
+    public UsuarioResponseDto atualizarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioRequestDto, @PathVariable Long id){
+        Usuario usuario = usuarioMapper.toDomain(usuarioRequestDto);
+        Usuario usuarioAtualizado = atualizarUsuarioPeloIdUseCase.execute(usuario, id);
+        return usuarioMapper.toResponse(usuarioAtualizado);
+    }
 }
