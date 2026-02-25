@@ -1,5 +1,6 @@
 package com.barbearia.fahcortes.infra.entities;
 
+import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,4 +17,6 @@ public class UsuarioEntity {
     private String nome;
     private String email;
     private String senha;
+    @Enumerated(EnumType.STRING)
+    private UsuarioEnum tipo;
 }

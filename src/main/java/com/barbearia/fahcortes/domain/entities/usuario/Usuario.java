@@ -12,6 +12,8 @@ public class Usuario {
 
     private String senha;
 
+    private UsuarioEnum tipo;
+
     public Usuario() {
         super();
     }
@@ -21,7 +23,6 @@ public class Usuario {
             throw new IllegalArgumentException("O e-mail não pode ser vazio.");
         }
 
-        // Regex robusta para validar o formato do e-mail
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
         Pattern pattern = Pattern.compile(emailRegex);
 
@@ -29,12 +30,17 @@ public class Usuario {
             throw new IllegalArgumentException("O formato do e-mail está inválido.");
         }
     }
-    public Usuario(Long id, String nome, String email, String senha) {
+    public Usuario(Long id, String nome, String email, String senha, UsuarioEnum tipo) {
         validarEmail(email);
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.tipo = tipo;
+    }
+
+    public UsuarioEnum getTipo() {
+        return tipo;
     }
 
     public Long getId() {
