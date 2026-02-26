@@ -45,7 +45,7 @@ public class UsuarioMapper {
                 usuarioRequestDto.getNome(),
                 usuarioRequestDto.getEmail(),
                 usuarioRequestDto.getSenha(),
-                null
+                usuarioRequestDto.getTipo()
         );
     }
 
@@ -57,7 +57,6 @@ public class UsuarioMapper {
         return usuarios.stream().map(this::toResponse).toList();
     }
 
-    // entity
 
 }
 
