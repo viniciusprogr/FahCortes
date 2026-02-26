@@ -6,6 +6,7 @@ import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,19 +18,31 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioGatewayImp(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper) {
+    public UsuarioGatewayImp(UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioMapper = usuarioMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Usuario cadastrarUsuario(Usuario usuario) {
+
         if (usuarioRepository.existsByEmail(usuario.getEmail())){
             throw new IllegalArgumentException("Ja existe um usuário com o email: " + usuario.getEmail());
         }
+
         UsuarioEntity entity = usuarioMapper.toEntity(usuario);
-        entity.setTipo(UsuarioEnum.USER);
+
+
+        String senha = passwordEncoder.encode(usuario.getSenha());
+        entity.setSenha(senha);
+
+        if (entity.getTipo()==null){
+            entity.setTipo(UsuarioEnum.USER);
+        }
+
         usuarioRepository.save(entity);
         return usuarioMapper.toDomain(entity);
     }

@@ -38,8 +38,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioResponseDto> CadastrarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioResquestDto){
-        Usuario usuario = usuarioMapper.toDomain(usuarioResquestDto);
+    public ResponseEntity<UsuarioResponseDto> CadastrarUsuario(@RequestBody @Valid UsuarioRequestDto usuarioRequestDto){
+        Usuario usuario = usuarioMapper.toDomain(usuarioRequestDto);
         Usuario usuarioSalvo =cadastrarUsuarioUseCase.execute(usuario);
         return  ResponseEntity.status(HttpStatus.CREATED).body(usuarioMapper.toResponse(usuarioSalvo));
     }
