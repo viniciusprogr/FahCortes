@@ -39,9 +39,6 @@ public class UsuarioGatewayImp implements UsuarioGateway {
         String senha = passwordEncoder.encode(usuario.getSenha());
         entity.setSenha(senha);
 
-        if (entity.getTipo()==null){
-            entity.setTipo(UsuarioEnum.USER);
-        }
 
         usuarioRepository.save(entity);
         return usuarioMapper.toDomain(entity);
