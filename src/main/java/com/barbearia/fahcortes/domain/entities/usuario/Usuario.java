@@ -36,7 +36,7 @@ public class Usuario {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.tipo = tipo;
+        this.tipo = (tipo == null) ? UsuarioEnum.USER : tipo;
     }
 
     public UsuarioEnum getTipo() {
