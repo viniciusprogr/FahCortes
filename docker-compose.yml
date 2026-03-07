@@ -5,6 +5,8 @@ services:
     image: mysql:8.0
     container_name: mysql_fahcortes
     restart: always
+    labels:
+      org.springframework.boot.jdbc.parameters: "createDatabaseIfNotExist=true"
     environment:
       # Configurações que você já usa no Spring
       MYSQL_DATABASE: fahcortes
