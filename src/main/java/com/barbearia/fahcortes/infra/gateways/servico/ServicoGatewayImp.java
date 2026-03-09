@@ -24,4 +24,9 @@ public class ServicoGatewayImp implements ServicoGateway {
         servicoRepository.save(servicoEntity);
         return servicoMapper.toDomain(servicoEntity);
     }
+
+    @Override
+    public Servico BuscarServicoPorId(Long id) {
+        return servicoRepository.findById(id.intValue()).map(servicoMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Serviço com id: " + id + "não encontrado"));
+    }
 }

@@ -5,4 +5,6 @@ import com.barbearia.fahcortes.domain.entities.serviço.Servico;
 public interface ServicoGateway {
 
     Servico cadastrarServico(Servico servico);
+
+    Servico BuscarServicoPorId(Long id);
 }

@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(
                                 request -> HttpMethod.POST.matches(request.getMethod()) && "/login".equals(request.getServletPath()),
                                 request -> HttpMethod.POST.matches(request.getMethod()) && "/usuarios".equals(request.getServletPath()),
+                                request -> HttpMethod.GET.matches(request.getMethod()) && request.getServletPath().startsWith("/servico"),
                                 request -> request.getHeader("Authorization") != null
                         )
                 )
@@ -34,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/servico/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/usuarios").authenticated();
                     req.anyRequest().authenticated();
                 })
