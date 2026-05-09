@@ -3,7 +3,6 @@ package com.barbearia.fahcortes.domain.gateways.usuario;
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UsuarioGateway {
 

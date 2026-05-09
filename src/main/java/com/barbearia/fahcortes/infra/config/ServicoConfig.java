@@ -3,6 +3,7 @@ package com.barbearia.fahcortes.infra.config;
 import com.barbearia.fahcortes.domain.gateways.servico.ServicoGateway;
 import com.barbearia.fahcortes.domain.usecases.servico.BuscarServicoPorIdUseCase;
 import com.barbearia.fahcortes.domain.usecases.servico.CadastrarServicoUseCase;
+import com.barbearia.fahcortes.domain.usecases.servico.ListarTodosServicosUseCase;
 import com.barbearia.fahcortes.domain.usecases.servico.RemoverServicoPorIdUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +24,10 @@ public class ServicoConfig {
     @Bean
     public RemoverServicoPorIdUseCase removerServicoPorIdUseCase(ServicoGateway servicoGateway){
         return new RemoverServicoPorIdUseCase(servicoGateway);
+    }
+
+    @Bean
+    public ListarTodosServicosUseCase listarTodosServicosUseCase(ServicoGateway servicoGateway){
+        return  new ListarTodosServicosUseCase(servicoGateway);
     }
 }
