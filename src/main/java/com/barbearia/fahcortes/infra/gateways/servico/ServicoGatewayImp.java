@@ -26,7 +26,13 @@ public class ServicoGatewayImp implements ServicoGateway {
     }
 
     @Override
-    public Servico BuscarServicoPorId(Long id) {
+    public Servico buscarServicoPorId(Long id) {
         return servicoRepository.findById(id.intValue()).map(servicoMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Serviço com id: " + id + "não encontrado"));
     }
+
+    @Override
+    public void removerServicoPorId(Long id) {
+        servicoRepository.deleteById(id.intValue());
+    }
+
 }

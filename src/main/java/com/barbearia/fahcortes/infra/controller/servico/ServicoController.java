@@ -44,4 +44,11 @@ public class ServicoController {
         Servico servico = buscarServicoPorIdUseCase.execute(id);
         return ResponseEntity.ok().body(servicoMapper.toDto(servico));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerServicoPorId(@PathVariable Long id) {
+        buscarServicoPorIdUseCase.execute(id);
+        return ResponseEntity.noContent().build();
+    }
 }

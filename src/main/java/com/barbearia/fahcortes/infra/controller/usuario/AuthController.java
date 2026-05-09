@@ -1,32 +1,46 @@
 package com.barbearia.fahcortes.infra.controller.usuario;
 
+
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.LoginRequestDto;
-import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
+import com.barbearia.fahcortes.infra.security.DadosTokenJWT;
 import com.barbearia.fahcortes.infra.security.TokenService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import com.barbearia.fahcortes.infra.security.UsuarioDetails;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login")
 public class AuthController {
-    private final UsuarioRepository repository;
-    private final PasswordEncoder encoder;
-    private final TokenService tokenService;
+    @Autowired
+    private AuthenticationManager manager;
 
-    public AuthController(UsuarioRepository repository, PasswordEncoder encoder, TokenService tokenService) {
-        this.repository = repository;
-        this.encoder = encoder;
-        this.tokenService = tokenService;
-    }
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping
-    public String login(@RequestBody LoginRequestDto loginRequestDto) {
-        var usuario = repository.findByEmail(loginRequestDto.email())
-                .orElseThrow(() -> new RuntimeException("Utilizador não encontrado"));
+    public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid LoginRequestDto dados) {
+        try {
+            var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+            var authentication = manager.authenticate(authenticationToken);
+            var usuarioDetails = (UsuarioDetails) authentication.getPrincipal();
 
-        if (encoder.matches(loginRequestDto.senha(), usuario.getSenha())) {
-            return tokenService.gerarToken(usuario);
+            if (usuarioDetails == null || usuarioDetails.getUsuarioEntity() == null) {
+                throw new UsernameNotFoundException("Usuário não encontrado ou detalhes indisponíveis");
+            }
+
+            var tokenJWT = tokenService.gerarToken(usuarioDetails.getUsuarioEntity());
+            return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(401).build();
         }
-        throw new RuntimeException("Senha inválida");
     }
 }

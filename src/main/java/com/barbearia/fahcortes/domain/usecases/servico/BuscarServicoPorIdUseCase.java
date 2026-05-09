@@ -13,7 +13,7 @@ public class BuscarServicoPorIdUseCase {
     }
 
     public Servico execute (Long Id){
-        return servicoGateway.BuscarServicoPorId(Id);
+        return servicoGateway.buscarServicoPorId(Id);
     }
 
 }

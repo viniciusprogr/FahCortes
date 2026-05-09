@@ -25,7 +25,7 @@ public class UsuarioMapper {
                 usuarioEntity.getNome(),
                 usuarioEntity.getEmail(),
                 usuarioEntity.getSenha(),
-                usuarioEntity.getTipo()
+                usuarioEntity.getRole()
         );
     }
 
@@ -35,7 +35,7 @@ public class UsuarioMapper {
                 usuario.getNome(),
                 usuario.getEmail(),
                 usuario.getSenha(),
-                usuario.getTipo()
+                usuario.getRole()
         );
     }
 

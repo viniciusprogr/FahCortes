@@ -1,26 +1,23 @@
 package com.barbearia.fahcortes.infra.security;
 
-import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
-    private final UsuarioRepository repository;
+    private final UsuarioDetailService usuarioDetailService;
 
-    public SecurityFilter(TokenService tokenService, UsuarioRepository repository) {
+    public SecurityFilter(TokenService tokenService, UsuarioDetailService usuarioDetailService) {
         this.tokenService = tokenService;
-        this.repository = repository;
+        this.usuarioDetailService = usuarioDetailService;
     }
 
     @Override
@@ -28,10 +25,19 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = recuperarToken(request);
         if (token != null) {
             var email = tokenService.validarToken(token);
-            var usuario = repository.findByEmail(email).orElse(null);
-            if (usuario != null) {
-                var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getTipo().name()));
-                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, authorities);
+            if (!email.isEmpty()) {
+                /**
+                 * 1. Carregamos o UsuarioDetails usando UsuarioDetailService
+                 * 2. UsuarioDetails já tem as autoridades (roles) configuradas
+                 * 3. Criamos o objeto de autenticação do Spring Security
+                 * 4. Definimos no contexto de segurança para usar em @PreAuthorize, etc
+                 */
+                var usuarioDetails = usuarioDetailService.loadUserByUsername(email);
+                var authentication = new UsernamePasswordAuthenticationToken(
+                        usuarioDetails,
+                        null,
+                        usuarioDetails.getAuthorities()
+                );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.entities;
 
 import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -14,9 +15,12 @@ public class UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String nome;
+    @NotBlank
     private String email;
+    @NotBlank
     private String senha;
     @Enumerated(EnumType.STRING)
-    private UsuarioEnum tipo;
+    private UsuarioEnum role;
 }

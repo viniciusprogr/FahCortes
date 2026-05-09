@@ -6,5 +6,7 @@ public interface ServicoGateway {
 
     Servico cadastrarServico(Servico servico);
 
-    Servico BuscarServicoPorId(Long id);
+    Servico buscarServicoPorId(Long id);
+
+    void removerServicoPorId(Long id);
 }
