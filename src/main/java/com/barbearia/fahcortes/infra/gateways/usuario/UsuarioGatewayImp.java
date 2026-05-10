@@ -1,7 +1,6 @@
-package com.barbearia.fahcortes.infra.gateways;
+package com.barbearia.fahcortes.infra.gateways.usuario;
 
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
-import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
@@ -10,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
