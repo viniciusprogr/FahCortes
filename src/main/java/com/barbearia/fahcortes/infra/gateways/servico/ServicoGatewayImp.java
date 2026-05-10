@@ -7,6 +7,9 @@ import com.barbearia.fahcortes.infra.mapper.servico.ServicoMapper;
 import com.barbearia.fahcortes.infra.persistence.ServicoRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ServicoGatewayImp implements ServicoGateway {
 
@@ -26,7 +29,21 @@ public class ServicoGatewayImp implements ServicoGateway {
     }
 
     @Override
-    public Servico BuscarServicoPorId(Long id) {
-        return servicoRepository.findById(id.intValue()).map(servicoMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Serviço com id: " + id + "não encontrado"));
+    public Servico buscarServicoPorId(Long id) {
+        return servicoRepository.findById(id).map(servicoMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Serviço com id: " + id + " não encontrado"));
     }
+
+    @Override
+    public void removerServicoPorId(Long id) {
+        if (!servicoRepository.existsById(id)) {
+            throw new IllegalArgumentException("Serviço com id: " + id + " não encontrado. Não é possível remover.");
+        }
+        servicoRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Servico> listarTodosServicos() {
+        return servicoRepository.findAll().stream().map(servicoMapper::toDomain).collect(Collectors.toList());
+    }
+
 }

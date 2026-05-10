@@ -2,18 +2,18 @@ package com.barbearia.fahcortes.domain.usecases.servico;
 
 import com.barbearia.fahcortes.domain.entities.serviço.Servico;
 import com.barbearia.fahcortes.domain.gateways.servico.ServicoGateway;
-import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
 
-public class BuscarServicoPorIdUseCase {
+import java.util.List;
+
+public class ListarTodosServicosUseCase {
 
     private final ServicoGateway servicoGateway;
 
-    public BuscarServicoPorIdUseCase(ServicoGateway servicoGateway) {
+    public ListarTodosServicosUseCase(ServicoGateway servicoGateway) {
         this.servicoGateway = servicoGateway;
     }
 
-    public Servico execute (Long Id){
-        return servicoGateway.buscarServicoPorId(Id);
+    public List<Servico> execute(){
+        return servicoGateway.listarTodosServicos();
     }
-
 }

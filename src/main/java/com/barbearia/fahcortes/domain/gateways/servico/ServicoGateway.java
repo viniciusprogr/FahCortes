@@ -2,9 +2,15 @@ package com.barbearia.fahcortes.domain.gateways.servico;
 
 import com.barbearia.fahcortes.domain.entities.serviço.Servico;
 
+import java.util.List;
+
 public interface ServicoGateway {
 
     Servico cadastrarServico(Servico servico);
 
-    Servico BuscarServicoPorId(Long id);
+    Servico buscarServicoPorId(Long id);
+
+    void removerServicoPorId(Long id);
+
+    List<Servico> listarTodosServicos();
 }

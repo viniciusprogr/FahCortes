@@ -7,6 +7,8 @@ import com.barbearia.fahcortes.infra.entities.ServicoEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ServicoMapper {
     private final ModelMapper mapper ;
@@ -24,12 +26,16 @@ public class ServicoMapper {
     }
 
 
-    public ServicoResponseDto toDto(Servico servico) {
+    public ServicoResponseDto toResponseDto(Servico servico) {
         return mapper.map(servico, ServicoResponseDto.class);
     }
 
     public Servico toDomain(ServicoRequestDto servicoRequestDto) {
         return mapper.map(servicoRequestDto, Servico.class);
+    }
+
+    public List<ServicoResponseDto> toResponseDtoToList(List<Servico> servicos){
+        return servicos.stream().map(this::toResponseDto).toList();
     }
 
 }

@@ -12,7 +12,7 @@ public class Usuario {
 
     private String senha;
 
-    private UsuarioEnum tipo;
+    private UsuarioEnum role;
 
     public Usuario() {
         super();
@@ -30,17 +30,17 @@ public class Usuario {
             throw new IllegalArgumentException("O formato do e-mail está inválido.");
         }
     }
-    public Usuario(Long id, String nome, String email, String senha, UsuarioEnum tipo) {
+    public Usuario(Long id, String nome, String email, String senha, UsuarioEnum role) {
         validarEmail(email);
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.tipo = (tipo == null) ? UsuarioEnum.USER : tipo;
+        this.role = role;
     }
 
-    public UsuarioEnum getTipo() {
-        return tipo;
+    public UsuarioEnum getRole() {
+        return role;
     }
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package com.barbearia.fahcortes.infra.gateways.usuario;
 
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
+import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
@@ -32,6 +33,7 @@ public class UsuarioGatewayImp implements UsuarioGateway {
         }
 
         UsuarioEntity entity = usuarioMapper.toEntity(usuario);
+        entity.setRole(UsuarioEnum.valueOf("USER"));
 
 
         String senha = passwordEncoder.encode(usuario.getSenha());
