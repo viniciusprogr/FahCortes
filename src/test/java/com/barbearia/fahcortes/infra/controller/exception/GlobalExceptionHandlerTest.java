@@ -2,43 +2,31 @@ package com.barbearia.fahcortes.infra.controller.exception;
 
 import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.exception.RegraDeNegocioException;
-import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
-import com.barbearia.fahcortes.infra.security.SecurityFilter;
-import com.barbearia.fahcortes.infra.security.UsuarioDetailService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(GlobalExceptionHandlerTest.FakeController.class)
-@Import(GlobalExceptionHandler.class)
 class GlobalExceptionHandlerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private SecurityFilter securityFilter;
-
-    @MockBean
-    private UsuarioDetailService usuarioDetailService;
-
-    @MockBean
-    private UsuarioRepository usuarioRepository;
-
-    @MockBean
-    private PasswordEncoder passwordEncoder;
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new FakeController())
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .setValidator(new LocalValidatorFactoryBean())
+                .build();
+    }
 
     @RestController
     @RequestMapping("/test-errors")
@@ -68,7 +56,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithMockUser
     void entidadeNaoEncontrada_deveRetornar404ComCodigo() throws Exception {
         mockMvc.perform(get("/test-errors/not-found"))
                 .andExpect(status().isNotFound())
@@ -77,7 +64,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithMockUser
     void regraDeNegocio_deveRetornar409ComCodigo() throws Exception {
         mockMvc.perform(get("/test-errors/business"))
                 .andExpect(status().isConflict())
@@ -86,7 +72,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithMockUser
     void erroGenerico_deveRetornar500ComCodigo() throws Exception {
         mockMvc.perform(get("/test-errors/generic"))
                 .andExpect(status().isInternalServerError())
@@ -95,7 +80,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @WithMockUser
     void validacaoInvalida_deveRetornar400ComDetails() throws Exception {
         mockMvc.perform(post("/test-errors/validation")
                         .contentType(MediaType.APPLICATION_JSON)

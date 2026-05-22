@@ -3,20 +3,22 @@ package com.barbearia.fahcortes.infra.controller;
 import com.barbearia.fahcortes.domain.entities.servico.Servico;
 import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.usecases.servico.*;
+import com.barbearia.fahcortes.infra.config.CorsConfig;
+import com.barbearia.fahcortes.infra.config.SecurityConfig;
 import com.barbearia.fahcortes.infra.controller.servico.ServicoController;
 import com.barbearia.fahcortes.infra.controller.servico.dtos.ServicoRequestDto;
 import com.barbearia.fahcortes.infra.controller.servico.dtos.ServicoResponseDto;
 import com.barbearia.fahcortes.infra.mapper.servico.ServicoMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
-import com.barbearia.fahcortes.infra.security.SecurityFilter;
+import com.barbearia.fahcortes.infra.security.TokenService;
 import com.barbearia.fahcortes.infra.security.UsuarioDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ServicoController.class)
+@Import({SecurityConfig.class, CorsConfig.class})
 class ServicoControllerTest {
 
     @Autowired
@@ -48,13 +51,11 @@ class ServicoControllerTest {
     @MockBean
     private ListarTodosServicosUseCase listarTodosServicosUseCase;
     @MockBean
-    private SecurityFilter securityFilter;
+    private TokenService tokenService;
     @MockBean
     private UsuarioDetailService usuarioDetailService;
     @MockBean
     private UsuarioRepository usuarioRepository;
-    @MockBean
-    private PasswordEncoder passwordEncoder;
 
     private ServicoResponseDto mockResponse(Long id, String descricao, BigDecimal valor) {
         ServicoResponseDto dto = new ServicoResponseDto();

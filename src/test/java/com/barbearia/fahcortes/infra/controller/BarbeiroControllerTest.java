@@ -1,21 +1,24 @@
 package com.barbearia.fahcortes.infra.controller;
 
 import com.barbearia.fahcortes.domain.entities.barbeiro.Barbeiro;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.usecases.barbeiro.*;
+import com.barbearia.fahcortes.infra.config.CorsConfig;
+import com.barbearia.fahcortes.infra.config.SecurityConfig;
 import com.barbearia.fahcortes.infra.controller.barbeiro.BarbeiroController;
 import com.barbearia.fahcortes.infra.controller.barbeiro.dtos.BarbeiroRequestDto;
 import com.barbearia.fahcortes.infra.controller.barbeiro.dtos.BarbeiroResponseDto;
 import com.barbearia.fahcortes.infra.mapper.barbeiro.BarbeiroMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
-import com.barbearia.fahcortes.infra.security.SecurityFilter;
+import com.barbearia.fahcortes.infra.security.TokenService;
 import com.barbearia.fahcortes.infra.security.UsuarioDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BarbeiroController.class)
+@Import({SecurityConfig.class, CorsConfig.class})
 class BarbeiroControllerTest {
 
     @Autowired
@@ -48,13 +52,11 @@ class BarbeiroControllerTest {
     @MockBean
     private DeletarBarbeiroPorIdUseCase deletarBarbeiroPorIdUseCase;
     @MockBean
-    private SecurityFilter securityFilter;
+    private TokenService tokenService;
     @MockBean
     private UsuarioDetailService usuarioDetailService;
     @MockBean
     private UsuarioRepository usuarioRepository;
-    @MockBean
-    private PasswordEncoder passwordEncoder;
 
     private BarbeiroResponseDto mockResponse(Long id, String nome) {
         BarbeiroResponseDto dto = new BarbeiroResponseDto();
@@ -97,7 +99,7 @@ class BarbeiroControllerTest {
     @Test
     void buscarPorId_quandoNaoExiste_deveRetornar404() throws Exception {
         when(buscarBarbeiroPorIdUseCase.execute(99L))
-                .thenThrow(new IllegalArgumentException("Barbeiro com id: 99 não encontrado"));
+                .thenThrow(new EntidadeNaoEncontradaException("Barbeiro", 99L));
 
         mockMvc.perform(get("/barbeiros/99"))
                 .andExpect(status().isNotFound());
