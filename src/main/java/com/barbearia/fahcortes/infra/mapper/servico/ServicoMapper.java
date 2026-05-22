@@ -1,6 +1,6 @@
 package com.barbearia.fahcortes.infra.mapper.servico;
 
-import com.barbearia.fahcortes.domain.entities.serviço.Servico;
+import com.barbearia.fahcortes.domain.entities.servico.Servico;
 import com.barbearia.fahcortes.infra.controller.servico.dtos.ServicoRequestDto;
 import com.barbearia.fahcortes.infra.controller.servico.dtos.ServicoResponseDto;
 import com.barbearia.fahcortes.infra.entities.ServicoEntity;

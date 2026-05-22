@@ -1,5 +1,7 @@
 package com.barbearia.fahcortes.infra.controller.exception;
 
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
+import com.barbearia.fahcortes.domain.exception.RegraDeNegocioException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

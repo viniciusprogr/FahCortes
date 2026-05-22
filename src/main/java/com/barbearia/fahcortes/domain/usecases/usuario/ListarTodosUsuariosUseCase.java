@@ -6,15 +6,14 @@ import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
 import java.util.List;
 
 public class ListarTodosUsuariosUseCase {
-    private final UsuarioGateway usuarioGateway;
 
+    private final UsuarioGateway usuarioGateway;
 
     public ListarTodosUsuariosUseCase(UsuarioGateway usuarioGateway) {
         this.usuarioGateway = usuarioGateway;
     }
 
-    public List<Usuario> execute(){
-       return usuarioGateway.ListarTodos();
+    public List<Usuario> execute() {
+        return usuarioGateway.listarTodos();
     }
-
 }

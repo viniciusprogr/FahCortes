@@ -13,6 +13,13 @@ public class CadastrarUsuarioUseCase {
     }
 
     public Usuario execute(Usuario usuario) {
-        return usuarioGateway.cadastrarUsuario(usuario);
+        Usuario novoUsuario = new Usuario(
+                null,
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getSenha(),
+                UsuarioEnum.USER
+        );
+        return usuarioGateway.cadastrarUsuario(novoUsuario);
     }
 }

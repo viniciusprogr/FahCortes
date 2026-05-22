@@ -1,8 +1,8 @@
 package com.barbearia.fahcortes.infra.gateways.servico;
 
-import com.barbearia.fahcortes.domain.entities.serviço.Servico;
+import com.barbearia.fahcortes.domain.entities.servico.Servico;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.gateways.servico.ServicoGateway;
-import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.ServicoEntity;
 import com.barbearia.fahcortes.infra.mapper.servico.ServicoMapper;
 import com.barbearia.fahcortes.infra.persistence.ServicoRepository;

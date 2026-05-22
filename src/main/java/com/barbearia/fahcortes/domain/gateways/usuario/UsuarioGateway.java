@@ -14,9 +14,7 @@ public interface UsuarioGateway {
 
     Usuario buscarPorEmail(String email);
 
-    List<Usuario> ListarTodos();
+    List<Usuario> listarTodos();
 
     Usuario atualizarUsuario(Usuario usuario, Long id);
-
-
 }

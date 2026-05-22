@@ -18,8 +18,7 @@ public class UsuarioMapper {
         this.modelMapper = modelMapper;
     }
 
-
-    public Usuario toDomain(UsuarioEntity usuarioEntity){
+    public Usuario toDomain(UsuarioEntity usuarioEntity) {
         return new Usuario(
                 usuarioEntity.getId(),
                 usuarioEntity.getNome(),
@@ -29,7 +28,7 @@ public class UsuarioMapper {
         );
     }
 
-    public UsuarioEntity toEntity(Usuario usuario){
+    public UsuarioEntity toEntity(Usuario usuario) {
         return new UsuarioEntity(
                 usuario.getId(),
                 usuario.getNome(),
@@ -39,14 +38,14 @@ public class UsuarioMapper {
         );
     }
 
-    public Usuario toDomain(UsuarioRequestDto usuarioRequestDto){
+    public Usuario toDomain(UsuarioRequestDto dto) {
         return new Usuario(
                 null,
-                usuarioRequestDto.getNome(),
-                usuarioRequestDto.getEmail(),
-                usuarioRequestDto.getSenha(),
-                usuarioRequestDto.getNovaSenha(),
-                usuarioRequestDto.getTipo()
+                dto.getNome(),
+                dto.getEmail(),
+                dto.getSenha(),
+                dto.getNovaSenha(),
+                null
         );
     }
 
@@ -54,10 +53,7 @@ public class UsuarioMapper {
         return modelMapper.map(usuario, UsuarioResponseDto.class);
     }
 
-    public List<UsuarioResponseDto> toResponseDtoList(List<Usuario> usuarios){
+    public List<UsuarioResponseDto> toResponseDtoList(List<Usuario> usuarios) {
         return usuarios.stream().map(this::toResponse).toList();
     }
-
-
 }
-

@@ -2,9 +2,9 @@ package com.barbearia.fahcortes.infra.gateways.agendamento;
 
 import com.barbearia.fahcortes.domain.entities.agendamento.Agendamento;
 import com.barbearia.fahcortes.domain.entities.agendamento.AgendamentoStatus;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
+import com.barbearia.fahcortes.domain.exception.RegraDeNegocioException;
 import com.barbearia.fahcortes.domain.gateways.agendamento.AgendamentoGateway;
-import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
-import com.barbearia.fahcortes.infra.controller.exception.RegraDeNegocioException;
 import com.barbearia.fahcortes.infra.entities.AgendamentoEntity;
 import com.barbearia.fahcortes.infra.mapper.agendamento.AgendamentoMapper;
 import com.barbearia.fahcortes.infra.persistence.AgendamentoRepository;

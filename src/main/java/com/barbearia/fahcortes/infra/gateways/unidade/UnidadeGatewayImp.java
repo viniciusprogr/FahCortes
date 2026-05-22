@@ -1,8 +1,8 @@
 package com.barbearia.fahcortes.infra.gateways.unidade;
 
 import com.barbearia.fahcortes.domain.entities.unidade.Unidade;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.gateways.unidade.UnidadeGateway;
-import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.UnidadeEntity;
 import com.barbearia.fahcortes.infra.mapper.unidade.UnidadeMapper;
 import com.barbearia.fahcortes.infra.persistence.UnidadeRepository;

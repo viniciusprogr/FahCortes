@@ -1,8 +1,8 @@
 package com.barbearia.fahcortes.infra.gateways.barbeiro;
 
 import com.barbearia.fahcortes.domain.entities.barbeiro.Barbeiro;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.gateways.barbeiro.BarbeiroGateway;
-import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.BarbeiroEntity;
 import com.barbearia.fahcortes.infra.mapper.barbeiro.BarbeiroMapper;
 import com.barbearia.fahcortes.infra.persistence.BarbeiroRepository;
@@ -24,8 +24,6 @@ public class BarbeiroGatewayImp implements BarbeiroGateway {
 
     @Override
     public Barbeiro cadastrar(Barbeiro barbeiro) {
-        if (barbeiro.getCurtidas() == null) barbeiro.setCurtidas(0);
-        if (barbeiro.getAtivo() == null) barbeiro.setAtivo(true);
         BarbeiroEntity entity = barbeiroMapper.toEntity(barbeiro);
         return barbeiroMapper.toDomain(barbeiroRepository.save(entity));
     }

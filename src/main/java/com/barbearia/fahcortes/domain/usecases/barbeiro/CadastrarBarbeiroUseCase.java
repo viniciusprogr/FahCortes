@@ -12,6 +12,8 @@ public class CadastrarBarbeiroUseCase {
     }
 
     public Barbeiro execute(Barbeiro barbeiro) {
+        if (barbeiro.getCurtidas() == null) barbeiro.setCurtidas(0);
+        if (barbeiro.getAtivo() == null) barbeiro.setAtivo(true);
         return barbeiroGateway.cadastrar(barbeiro);
     }
 }

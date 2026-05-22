@@ -1,8 +1,8 @@
 package com.barbearia.fahcortes.infra.gateways.plano;
 
 import com.barbearia.fahcortes.domain.entities.plano.Plano;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.gateways.plano.PlanoGateway;
-import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.PlanoEntity;
 import com.barbearia.fahcortes.infra.mapper.plano.PlanoMapper;
 import com.barbearia.fahcortes.infra.persistence.PlanoRepository;

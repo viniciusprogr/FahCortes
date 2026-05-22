@@ -1,6 +1,6 @@
 package com.barbearia.fahcortes.domain.gateways.servico;
 
-import com.barbearia.fahcortes.domain.entities.serviço.Servico;
+import com.barbearia.fahcortes.domain.entities.servico.Servico;
 
 import java.util.List;
 

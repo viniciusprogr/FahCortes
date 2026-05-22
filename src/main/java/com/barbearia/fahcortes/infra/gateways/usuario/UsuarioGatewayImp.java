@@ -1,10 +1,9 @@
 package com.barbearia.fahcortes.infra.gateways.usuario;
 
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
-import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
-import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
-import com.barbearia.fahcortes.infra.controller.exception.RegraDeNegocioException;
+import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
+import com.barbearia.fahcortes.domain.exception.RegraDeNegocioException;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
@@ -35,7 +34,6 @@ public class UsuarioGatewayImp implements UsuarioGateway {
         }
 
         UsuarioEntity entity = usuarioMapper.toEntity(usuario);
-        entity.setRole(UsuarioEnum.valueOf("USER"));
         entity.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         usuarioRepository.save(entity);
@@ -68,7 +66,7 @@ public class UsuarioGatewayImp implements UsuarioGateway {
     }
 
     @Override
-    public List<Usuario> ListarTodos() {
+    public List<Usuario> listarTodos() {
         return usuarioRepository.findAll().stream().map(usuarioMapper::toDomain).collect(Collectors.toList());
     }
 

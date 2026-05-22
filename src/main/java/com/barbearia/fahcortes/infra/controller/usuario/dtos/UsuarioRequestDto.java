@@ -1,9 +1,6 @@
 package com.barbearia.fahcortes.infra.controller.usuario.dtos;
 
-import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +12,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UsuarioRequestDto {
 
-    @NotNull(message = "nome não pode ser nulo")
+    @NotBlank(message = "O nome não pode ser vazio")
     private String nome;
 
-    @NotNull(message = "email não pode ser nulo")
+    @NotBlank(message = "O email não pode ser vazio")
     private String email;
 
-    @NotNull(message = "senha não pode ser nulo")
+    @NotBlank(message = "A senha não pode ser vazia")
     private String senha;
 
     private String novaSenha;
-
-    private UsuarioEnum tipo;
 }

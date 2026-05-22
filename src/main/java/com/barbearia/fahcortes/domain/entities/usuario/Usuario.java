@@ -11,20 +11,7 @@ public class Usuario {
     private String novaSenha;
     private UsuarioEnum role;
 
-    public Usuario() {
-        super();
-    }
-
-    public void validarEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("O e-mail não pode ser vazio.");
-        }
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        if (!pattern.matcher(email).matches()) {
-            throw new IllegalArgumentException("O formato do e-mail está inválido.");
-        }
-    }
+    public Usuario() {}
 
     public Usuario(Long id, String nome, String email, String senha, UsuarioEnum role) {
         validarEmail(email);
@@ -43,6 +30,16 @@ public class Usuario {
         this.senha = senha;
         this.novaSenha = novaSenha;
         this.role = role;
+    }
+
+    private void validarEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("O e-mail não pode ser vazio.");
+        }
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        if (!Pattern.compile(emailRegex).matcher(email).matches()) {
+            throw new IllegalArgumentException("O formato do e-mail está inválido.");
+        }
     }
 
     public UsuarioEnum getRole() { return role; }

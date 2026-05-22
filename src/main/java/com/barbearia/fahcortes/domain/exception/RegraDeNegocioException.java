@@ -1,4 +1,4 @@
-package com.barbearia.fahcortes.infra.controller.exception;
+package com.barbearia.fahcortes.domain.exception;
 
 public class RegraDeNegocioException extends RuntimeException {
 

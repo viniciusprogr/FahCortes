@@ -1,7 +1,7 @@
 package com.barbearia.fahcortes.infra.controller.servico;
 
 
-import com.barbearia.fahcortes.domain.entities.serviço.Servico;
+import com.barbearia.fahcortes.domain.entities.servico.Servico;
 import com.barbearia.fahcortes.domain.usecases.servico.BuscarServicoPorIdUseCase;
 import com.barbearia.fahcortes.domain.usecases.servico.CadastrarServicoUseCase;
 import com.barbearia.fahcortes.domain.usecases.servico.ListarTodosServicosUseCase;
