@@ -9,7 +9,7 @@ import java.time.*;
 
 @Service
 public class TokenService {
-    @Value("${api.security.token.secret:minha-chave-secreta}")
+    @Value("${api.security.token.secret}")
     private String secret;
 
     public String gerarToken(UsuarioEntity usuario) {

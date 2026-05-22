@@ -71,12 +71,17 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
     @Override
     public Usuario atualizarUsuario(Usuario usuario, Long id) {
-      UsuarioEntity usuarioEntity = usuarioRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Usuário com id :" + id + "não encontrado"));
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário com id: " + id + " não encontrado"));
 
-      usuarioEntity.setNome(usuario.getNome());
-      usuarioEntity.setEmail(usuario.getEmail());
-      usuarioEntity.setSenha(usuario.getSenha());
-      return usuarioMapper.toDomain(usuarioRepository.save(usuarioEntity));
+        usuarioEntity.setNome(usuario.getNome());
+        usuarioEntity.setEmail(usuario.getEmail());
+
+        if (usuario.getNovaSenha() != null && !usuario.getNovaSenha().isBlank()) {
+            usuarioEntity.setSenha(passwordEncoder.encode(usuario.getNovaSenha()));
+        }
+
+        return usuarioMapper.toDomain(usuarioRepository.save(usuarioEntity));
     }
 
 }

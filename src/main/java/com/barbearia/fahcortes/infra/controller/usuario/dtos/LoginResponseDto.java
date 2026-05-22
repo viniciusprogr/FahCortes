@@ -1,3 +1,6 @@
 package com.barbearia.fahcortes.infra.controller.usuario.dtos;
 
-public record LoginResponseDto(String token) {}
+import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
+
+public record LoginResponseDto(String token, UsuarioEnum role) {
+}

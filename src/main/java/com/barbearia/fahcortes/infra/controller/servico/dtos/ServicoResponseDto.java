@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ServicoResponseDto {
 
+    private Long id;
+
     private String descricao;
 
     private Long tempo;

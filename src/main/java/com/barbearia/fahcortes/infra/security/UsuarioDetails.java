@@ -55,4 +55,5 @@ public class UsuarioDetails implements UserDetails {
     public UsuarioEntity getUsuarioEntity() {
         return usuarioEntity;
     }
+
 }

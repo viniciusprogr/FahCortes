@@ -45,6 +45,7 @@ public class UsuarioMapper {
                 usuarioRequestDto.getNome(),
                 usuarioRequestDto.getEmail(),
                 usuarioRequestDto.getSenha(),
+                usuarioRequestDto.getNovaSenha(),
                 usuarioRequestDto.getTipo()
         );
     }

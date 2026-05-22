@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -23,47 +23,47 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityFilter securityFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityFilter securityFilter,
+                                                   CorsConfigurationSource corsConfigurationSource) throws Exception {
         return http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(
-                                request -> HttpMethod.POST.matches(request.getMethod()) && "/login".equals(request.getServletPath()),
-                                request -> HttpMethod.POST.matches(request.getMethod()) && "/usuarios".equals(request.getServletPath()),
-                                request -> HttpMethod.GET.matches(request.getMethod()) && request.getServletPath().startsWith("/servico"),
-                                request -> request.getHeader("Authorization") != null
-                        )
-                )
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/servico").permitAll();
+
                     req.requestMatchers(HttpMethod.GET, "/servico/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/usuarios").authenticated();
+                    req.requestMatchers(HttpMethod.GET, "/servico").permitAll();
+
+                    req.requestMatchers(HttpMethod.GET, "/barbeiros/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/barbeiros").permitAll();
+
+                    req.requestMatchers(HttpMethod.GET, "/produtos/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/produtos").permitAll();
+
+                    req.requestMatchers(HttpMethod.GET, "/unidades/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/unidades").permitAll();
+
+                    req.requestMatchers(HttpMethod.GET, "/planos/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/planos").permitAll();
+
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-
     @Bean
     public PasswordEncoder PasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * AuthenticationManager é responsável por gerenciar a autenticação.
-     * Ele usa o UsuarioDetailService para carregar o usuário e compara as senhas.
-     * Isso centraliza a lógica de autenticação no Spring Security.
-     */
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, UsuarioDetailService usuarioDetailService, PasswordEncoder passwordEncoder) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder
-                .userDetailsService(usuarioDetailService)
-                .passwordEncoder(passwordEncoder);
-        return authenticationManagerBuilder.build();
+    public AuthenticationManager authenticationManager(HttpSecurity http, UsuarioDetailService usuarioDetailService,
+                                                       PasswordEncoder passwordEncoder) throws Exception {
+        AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(usuarioDetailService).passwordEncoder(passwordEncoder);
+        return builder.build();
     }
 }

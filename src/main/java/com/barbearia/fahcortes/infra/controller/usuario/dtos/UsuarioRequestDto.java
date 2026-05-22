@@ -24,5 +24,7 @@ public class UsuarioRequestDto {
     @NotNull(message = "senha não pode ser nulo")
     private String senha;
 
+    private String novaSenha;
+
     private UsuarioEnum tipo;
 }

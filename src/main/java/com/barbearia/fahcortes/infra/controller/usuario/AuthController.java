@@ -2,7 +2,7 @@ package com.barbearia.fahcortes.infra.controller.usuario;
 
 
 import com.barbearia.fahcortes.infra.controller.usuario.dtos.LoginRequestDto;
-import com.barbearia.fahcortes.infra.security.DadosTokenJWT;
+import com.barbearia.fahcortes.infra.controller.usuario.dtos.LoginResponseDto;
 import com.barbearia.fahcortes.infra.security.TokenService;
 import com.barbearia.fahcortes.infra.security.UsuarioDetails;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<DadosTokenJWT> efetuarLogin(@RequestBody @Valid LoginRequestDto dados) {
+    public ResponseEntity<LoginResponseDto> efetuarLogin(@RequestBody @Valid LoginRequestDto dados) {
         try {
             var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
             var authentication = manager.authenticate(authenticationToken);
@@ -37,8 +37,12 @@ public class AuthController {
                 throw new UsernameNotFoundException("Usuário não encontrado ou detalhes indisponíveis");
             }
 
-            var tokenJWT = tokenService.gerarToken(usuarioDetails.getUsuarioEntity());
-            return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
+            var usuario = usuarioDetails.getUsuarioEntity();
+            var tokenJWT = tokenService.gerarToken(usuario);
+            var role = usuario.getRole();
+
+            return ResponseEntity.ok(new LoginResponseDto(tokenJWT, role));
+
         } catch (AuthenticationException e) {
             return ResponseEntity.status(401).build();
         }
