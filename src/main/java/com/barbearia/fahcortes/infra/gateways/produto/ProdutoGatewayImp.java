@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.gateways.produto;
 
 import com.barbearia.fahcortes.domain.entities.produto.Produto;
 import com.barbearia.fahcortes.domain.gateways.produto.ProdutoGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.ProdutoEntity;
 import com.barbearia.fahcortes.infra.mapper.produto.ProdutoMapper;
 import com.barbearia.fahcortes.infra.persistence.ProdutoRepository;
@@ -31,7 +32,8 @@ public class ProdutoGatewayImp implements ProdutoGateway {
     public Produto buscarPorId(Long id) {
         return produtoRepository.findById(id)
                 .map(produtoMapper::toDomain)
-                .orElseThrow(() -> new IllegalArgumentException("Produto com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Produto com id " + id + " não encontrado. Verifique se o id informado está correto."));
     }
 
     @Override
@@ -44,7 +46,8 @@ public class ProdutoGatewayImp implements ProdutoGateway {
     @Override
     public Produto atualizar(Produto produto, Long id) {
         ProdutoEntity entity = produtoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produto com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Não foi possível atualizar. Produto com id " + id + " não encontrado."));
 
         entity.setNome(produto.getNome());
         entity.setDescricao(produto.getDescricao());
@@ -58,7 +61,8 @@ public class ProdutoGatewayImp implements ProdutoGateway {
     @Override
     public void deletar(Long id) {
         if (!produtoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Produto com id: " + id + " não encontrado");
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover o produto com id " + id + ". Nenhum produto encontrado com esse id.");
         }
         produtoRepository.deleteById(id);
     }

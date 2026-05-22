@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.gateways.servico;
 
 import com.barbearia.fahcortes.domain.entities.serviço.Servico;
 import com.barbearia.fahcortes.domain.gateways.servico.ServicoGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.ServicoEntity;
 import com.barbearia.fahcortes.infra.mapper.servico.ServicoMapper;
 import com.barbearia.fahcortes.infra.persistence.ServicoRepository;
@@ -30,13 +31,17 @@ public class ServicoGatewayImp implements ServicoGateway {
 
     @Override
     public Servico buscarServicoPorId(Long id) {
-        return servicoRepository.findById(id).map(servicoMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Serviço com id: " + id + " não encontrado"));
+        return servicoRepository.findById(id)
+                .map(servicoMapper::toDomain)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Serviço com id " + id + " não encontrado. Verifique se o id informado está correto."));
     }
 
     @Override
     public void removerServicoPorId(Long id) {
         if (!servicoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Serviço com id: " + id + " não encontrado. Não é possível remover.");
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover o serviço com id " + id + ". Nenhum serviço encontrado com esse id.");
         }
         servicoRepository.deleteById(id);
     }
@@ -45,5 +50,4 @@ public class ServicoGatewayImp implements ServicoGateway {
     public List<Servico> listarTodosServicos() {
         return servicoRepository.findAll().stream().map(servicoMapper::toDomain).collect(Collectors.toList());
     }
-
 }

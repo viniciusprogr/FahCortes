@@ -3,6 +3,8 @@ package com.barbearia.fahcortes.infra.gateways.usuario;
 import com.barbearia.fahcortes.domain.entities.usuario.Usuario;
 import com.barbearia.fahcortes.domain.entities.usuario.UsuarioEnum;
 import com.barbearia.fahcortes.domain.gateways.usuario.UsuarioGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
+import com.barbearia.fahcortes.infra.controller.exception.RegraDeNegocioException;
 import com.barbearia.fahcortes.infra.entities.UsuarioEntity;
 import com.barbearia.fahcortes.infra.mapper.usuario.UsuarioMapper;
 import com.barbearia.fahcortes.infra.persistence.UsuarioRepository;
@@ -27,18 +29,14 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
     @Override
     public Usuario cadastrarUsuario(Usuario usuario) {
-
-        if (usuarioRepository.existsByEmail(usuario.getEmail())){
-            throw new IllegalArgumentException("Ja existe um usuário com o email: " + usuario.getEmail());
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) {
+            throw new RegraDeNegocioException(
+                    "Já existe um usuário cadastrado com o email '" + usuario.getEmail() + "'. Utilize outro email para realizar o cadastro.");
         }
 
         UsuarioEntity entity = usuarioMapper.toEntity(usuario);
         entity.setRole(UsuarioEnum.valueOf("USER"));
-
-
-        String senha = passwordEncoder.encode(usuario.getSenha());
-        entity.setSenha(senha);
-
+        entity.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         usuarioRepository.save(entity);
         return usuarioMapper.toDomain(entity);
@@ -46,23 +44,28 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
     @Override
     public void removerUsuario(Long id) {
-        if(!usuarioRepository.existsById(id)){
-            throw new IllegalArgumentException("Não existe usuário com o id: " + id );
+        if (!usuarioRepository.existsById(id)) {
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover o usuário com id " + id + ". Nenhum usuário encontrado com esse id.");
         }
         usuarioRepository.deleteById(id);
     }
 
     @Override
     public Usuario buscarPorId(Long id) {
-       return usuarioRepository.findById(id).map(usuarioMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Usuário com id não encontrado"));
+        return usuarioRepository.findById(id)
+                .map(usuarioMapper::toDomain)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Usuário com id " + id + " não encontrado. Verifique se o id informado está correto."));
     }
-
 
     @Override
     public Usuario buscarPorEmail(String email) {
-        return usuarioRepository.findByEmail(email).map(usuarioMapper::toDomain).orElseThrow(() -> new IllegalArgumentException("Usuário com: " + email + "não encontrado"));
+        return usuarioRepository.findByEmail(email)
+                .map(usuarioMapper::toDomain)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Usuário com o email '" + email + "' não encontrado. Verifique se o email informado está correto."));
     }
-
 
     @Override
     public List<Usuario> ListarTodos() {
@@ -72,7 +75,8 @@ public class UsuarioGatewayImp implements UsuarioGateway {
     @Override
     public Usuario atualizarUsuario(Usuario usuario, Long id) {
         UsuarioEntity usuarioEntity = usuarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Não foi possível atualizar. Usuário com id " + id + " não encontrado."));
 
         usuarioEntity.setNome(usuario.getNome());
         usuarioEntity.setEmail(usuario.getEmail());
@@ -83,5 +87,4 @@ public class UsuarioGatewayImp implements UsuarioGateway {
 
         return usuarioMapper.toDomain(usuarioRepository.save(usuarioEntity));
     }
-
 }

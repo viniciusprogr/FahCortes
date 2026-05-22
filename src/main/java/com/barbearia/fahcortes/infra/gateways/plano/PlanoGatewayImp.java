@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.gateways.plano;
 
 import com.barbearia.fahcortes.domain.entities.plano.Plano;
 import com.barbearia.fahcortes.domain.gateways.plano.PlanoGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.PlanoEntity;
 import com.barbearia.fahcortes.infra.mapper.plano.PlanoMapper;
 import com.barbearia.fahcortes.infra.persistence.PlanoRepository;
@@ -31,7 +32,8 @@ public class PlanoGatewayImp implements PlanoGateway {
     public Plano buscarPorId(Long id) {
         return planoRepository.findById(id)
                 .map(planoMapper::toDomain)
-                .orElseThrow(() -> new IllegalArgumentException("Plano com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Plano com id " + id + " não encontrado. Verifique se o id informado está correto."));
     }
 
     @Override
@@ -44,7 +46,8 @@ public class PlanoGatewayImp implements PlanoGateway {
     @Override
     public Plano atualizar(Plano plano, Long id) {
         PlanoEntity entity = planoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Plano com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Não foi possível atualizar. Plano com id " + id + " não encontrado."));
 
         entity.setNome(plano.getNome());
         entity.setDescricao(plano.getDescricao());
@@ -58,7 +61,8 @@ public class PlanoGatewayImp implements PlanoGateway {
     @Override
     public void deletar(Long id) {
         if (!planoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Plano com id: " + id + " não encontrado");
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover o plano com id " + id + ". Nenhum plano encontrado com esse id.");
         }
         planoRepository.deleteById(id);
     }

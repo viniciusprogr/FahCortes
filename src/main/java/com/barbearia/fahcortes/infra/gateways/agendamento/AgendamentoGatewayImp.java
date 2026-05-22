@@ -3,6 +3,8 @@ package com.barbearia.fahcortes.infra.gateways.agendamento;
 import com.barbearia.fahcortes.domain.entities.agendamento.Agendamento;
 import com.barbearia.fahcortes.domain.entities.agendamento.AgendamentoStatus;
 import com.barbearia.fahcortes.domain.gateways.agendamento.AgendamentoGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
+import com.barbearia.fahcortes.infra.controller.exception.RegraDeNegocioException;
 import com.barbearia.fahcortes.infra.entities.AgendamentoEntity;
 import com.barbearia.fahcortes.infra.mapper.agendamento.AgendamentoMapper;
 import com.barbearia.fahcortes.infra.persistence.AgendamentoRepository;
@@ -34,7 +36,8 @@ public class AgendamentoGatewayImp implements AgendamentoGateway {
     public Agendamento buscarPorId(Long id) {
         return agendamentoRepository.findById(id)
                 .map(agendamentoMapper::toDomain)
-                .orElseThrow(() -> new IllegalArgumentException("Agendamento com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Agendamento com id " + id + " não encontrado. Verifique se o id informado está correto."));
     }
 
     @Override
@@ -55,10 +58,12 @@ public class AgendamentoGatewayImp implements AgendamentoGateway {
     @Transactional
     public Agendamento cancelar(Long id) {
         AgendamentoEntity entity = agendamentoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Agendamento com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Não foi possível cancelar. Agendamento com id " + id + " não encontrado."));
 
         if (entity.getStatus() == AgendamentoStatus.CANCELADO) {
-            throw new IllegalStateException("Agendamento já está cancelado");
+            throw new RegraDeNegocioException(
+                    "O agendamento com id " + id + " já está cancelado e não pode ser cancelado novamente.");
         }
 
         entity.setStatus(AgendamentoStatus.CANCELADO);

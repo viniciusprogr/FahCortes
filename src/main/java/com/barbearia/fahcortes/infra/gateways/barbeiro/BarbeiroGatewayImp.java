@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.gateways.barbeiro;
 
 import com.barbearia.fahcortes.domain.entities.barbeiro.Barbeiro;
 import com.barbearia.fahcortes.domain.gateways.barbeiro.BarbeiroGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.BarbeiroEntity;
 import com.barbearia.fahcortes.infra.mapper.barbeiro.BarbeiroMapper;
 import com.barbearia.fahcortes.infra.persistence.BarbeiroRepository;
@@ -33,7 +34,8 @@ public class BarbeiroGatewayImp implements BarbeiroGateway {
     public Barbeiro buscarPorId(Long id) {
         return barbeiroRepository.findById(id)
                 .map(barbeiroMapper::toDomain)
-                .orElseThrow(() -> new IllegalArgumentException("Barbeiro com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Barbeiro com id " + id + " não encontrado. Verifique se o id informado está correto."));
     }
 
     @Override
@@ -46,7 +48,8 @@ public class BarbeiroGatewayImp implements BarbeiroGateway {
     @Override
     public Barbeiro atualizar(Barbeiro barbeiro, Long id) {
         BarbeiroEntity entity = barbeiroRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Barbeiro com id: " + id + " não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Não foi possível atualizar. Barbeiro com id " + id + " não encontrado."));
 
         entity.setNome(barbeiro.getNome());
         entity.setEspecialidade(barbeiro.getEspecialidade());
@@ -60,7 +63,8 @@ public class BarbeiroGatewayImp implements BarbeiroGateway {
     @Override
     public void deletar(Long id) {
         if (!barbeiroRepository.existsById(id)) {
-            throw new IllegalArgumentException("Barbeiro com id: " + id + " não encontrado");
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover o barbeiro com id " + id + ". Nenhum barbeiro encontrado com esse id.");
         }
         barbeiroRepository.deleteById(id);
     }

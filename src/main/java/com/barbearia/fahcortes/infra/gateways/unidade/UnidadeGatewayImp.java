@@ -2,6 +2,7 @@ package com.barbearia.fahcortes.infra.gateways.unidade;
 
 import com.barbearia.fahcortes.domain.entities.unidade.Unidade;
 import com.barbearia.fahcortes.domain.gateways.unidade.UnidadeGateway;
+import com.barbearia.fahcortes.infra.controller.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.infra.entities.UnidadeEntity;
 import com.barbearia.fahcortes.infra.mapper.unidade.UnidadeMapper;
 import com.barbearia.fahcortes.infra.persistence.UnidadeRepository;
@@ -31,7 +32,8 @@ public class UnidadeGatewayImp implements UnidadeGateway {
     public Unidade buscarPorId(Long id) {
         return unidadeRepository.findById(id)
                 .map(unidadeMapper::toDomain)
-                .orElseThrow(() -> new IllegalArgumentException("Unidade com id: " + id + " não encontrada"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Unidade com id " + id + " não encontrada. Verifique se o id informado está correto."));
     }
 
     @Override
@@ -44,7 +46,8 @@ public class UnidadeGatewayImp implements UnidadeGateway {
     @Override
     public Unidade atualizar(Unidade unidade, Long id) {
         UnidadeEntity entity = unidadeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Unidade com id: " + id + " não encontrada"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Não foi possível atualizar. Unidade com id " + id + " não encontrada."));
 
         entity.setNome(unidade.getNome());
         entity.setEndereco(unidade.getEndereco());
@@ -60,7 +63,8 @@ public class UnidadeGatewayImp implements UnidadeGateway {
     @Override
     public void deletar(Long id) {
         if (!unidadeRepository.existsById(id)) {
-            throw new IllegalArgumentException("Unidade com id: " + id + " não encontrada");
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover a unidade com id " + id + ". Nenhuma unidade encontrada com esse id.");
         }
         unidadeRepository.deleteById(id);
     }
