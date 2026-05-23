@@ -2,6 +2,8 @@ package com.barbearia.fahcortes.infra.controller.exception;
 
 import com.barbearia.fahcortes.domain.exception.EntidadeNaoEncontradaException;
 import com.barbearia.fahcortes.domain.exception.RegraDeNegocioException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EntidadeNaoEncontradaException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(EntidadeNaoEncontradaException e) {
@@ -50,6 +54,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(Exception e) {
+        log.error("Erro interno inesperado: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("INTERNAL_SERVER_ERROR", "Erro interno do servidor"));
     }

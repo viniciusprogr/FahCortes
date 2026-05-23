@@ -120,7 +120,7 @@ class ServicoControllerTest {
         mockMvc.perform(post("/servico")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.descricao").value("Barba"));
     }
 

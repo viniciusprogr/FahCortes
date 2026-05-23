@@ -9,6 +9,7 @@ import com.barbearia.fahcortes.domain.usecases.servico.RemoverServicoPorIdUseCas
 import com.barbearia.fahcortes.infra.controller.servico.dtos.ServicoRequestDto;
 import com.barbearia.fahcortes.infra.controller.servico.dtos.ServicoResponseDto;
 import com.barbearia.fahcortes.infra.mapper.servico.ServicoMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class ServicoController {
     public ResponseEntity<ServicoResponseDto> cadastrarServico(@RequestBody ServicoRequestDto servicoRequestDto) {
         Servico servico = servicoMapper.toDomain(servicoRequestDto);
         Servico servicoSalvo = cadastrarServicoUseCase.execute(servico);
-        return ResponseEntity.ok().body(servicoMapper.toResponseDto(servicoSalvo));
+        return ResponseEntity.status(HttpStatus.CREATED).body(servicoMapper.toResponseDto(servicoSalvo));
     }
 
 
@@ -60,7 +61,6 @@ public class ServicoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ServicoResponseDto>> listarTodosServicos() {
         List<Servico> servicos = listarTodosServicosUseCase.execute();
