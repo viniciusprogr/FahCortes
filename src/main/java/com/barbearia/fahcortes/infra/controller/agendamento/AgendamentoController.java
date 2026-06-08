@@ -8,6 +8,7 @@ import com.barbearia.fahcortes.infra.mapper.agendamento.AgendamentoMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +22,20 @@ public class AgendamentoController {
     private final BuscarAgendamentoPorIdUseCase buscarAgendamentoPorIdUseCase;
     private final ListarAgendamentosUseCase listarAgendamentosUseCase;
     private final CancelarAgendamentoUseCase cancelarAgendamentoUseCase;
+    private final DeletarAgendamentoPorIdUseCase deletarAgendamentoPorIdUseCase;
 
     public AgendamentoController(AgendamentoMapper agendamentoMapper,
                                   CriarAgendamentoUseCase criarAgendamentoUseCase,
                                   BuscarAgendamentoPorIdUseCase buscarAgendamentoPorIdUseCase,
                                   ListarAgendamentosUseCase listarAgendamentosUseCase,
-                                  CancelarAgendamentoUseCase cancelarAgendamentoUseCase) {
+                                  CancelarAgendamentoUseCase cancelarAgendamentoUseCase,
+                                  DeletarAgendamentoPorIdUseCase deletarAgendamentoPorIdUseCase) {
         this.agendamentoMapper = agendamentoMapper;
         this.criarAgendamentoUseCase = criarAgendamentoUseCase;
         this.buscarAgendamentoPorIdUseCase = buscarAgendamentoPorIdUseCase;
         this.listarAgendamentosUseCase = listarAgendamentosUseCase;
         this.cancelarAgendamentoUseCase = cancelarAgendamentoUseCase;
+        this.deletarAgendamentoPorIdUseCase = deletarAgendamentoPorIdUseCase;
     }
 
     @GetMapping
@@ -58,5 +62,12 @@ public class AgendamentoController {
     public ResponseEntity<AgendamentoResponseDto> cancelar(@PathVariable Long id) {
         Agendamento agendamento = cancelarAgendamentoUseCase.execute(id);
         return ResponseEntity.ok(agendamentoMapper.toResponse(agendamento));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        deletarAgendamentoPorIdUseCase.execute(id);
+        return ResponseEntity.noContent().build();
     }
 }

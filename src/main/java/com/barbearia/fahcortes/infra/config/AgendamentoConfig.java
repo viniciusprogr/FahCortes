@@ -27,4 +27,9 @@ public class AgendamentoConfig {
     public CancelarAgendamentoUseCase cancelarAgendamentoUseCase(AgendamentoGateway agendamentoGateway) {
         return new CancelarAgendamentoUseCase(agendamentoGateway);
     }
+
+    @Bean
+    public DeletarAgendamentoPorIdUseCase deletarAgendamentoPorIdUseCase(AgendamentoGateway agendamentoGateway) {
+        return new DeletarAgendamentoPorIdUseCase(agendamentoGateway);
+    }
 }

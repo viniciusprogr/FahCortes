@@ -32,4 +32,9 @@ public class BarbeiroConfig {
     public DeletarBarbeiroPorIdUseCase deletarBarbeiroPorIdUseCase(BarbeiroGateway barbeiroGateway) {
         return new DeletarBarbeiroPorIdUseCase(barbeiroGateway);
     }
+
+    @Bean
+    public CurtirBarbeiroUseCase curtirBarbeiroUseCase(BarbeiroGateway barbeiroGateway) {
+        return new CurtirBarbeiroUseCase(barbeiroGateway);
+    }
 }

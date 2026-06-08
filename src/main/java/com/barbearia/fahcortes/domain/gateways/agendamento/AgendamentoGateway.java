@@ -15,4 +15,6 @@ public interface AgendamentoGateway {
     List<Agendamento> listarTodos();
 
     Agendamento cancelar(Long id);
+
+    void deletar(Long id);
 }

@@ -23,19 +23,22 @@ public class BarbeiroController {
     private final ListarTodosBarbeirosUseCase listarTodosBarbeirosUseCase;
     private final AtualizarBarbeiroPorIdUseCase atualizarBarbeiroPorIdUseCase;
     private final DeletarBarbeiroPorIdUseCase deletarBarbeiroPorIdUseCase;
+    private final CurtirBarbeiroUseCase curtirBarbeiroUseCase;
 
     public BarbeiroController(BarbeiroMapper barbeiroMapper,
                               CadastrarBarbeiroUseCase cadastrarBarbeiroUseCase,
                               BuscarBarbeiroPorIdUseCase buscarBarbeiroPorIdUseCase,
                               ListarTodosBarbeirosUseCase listarTodosBarbeirosUseCase,
                               AtualizarBarbeiroPorIdUseCase atualizarBarbeiroPorIdUseCase,
-                              DeletarBarbeiroPorIdUseCase deletarBarbeiroPorIdUseCase) {
+                              DeletarBarbeiroPorIdUseCase deletarBarbeiroPorIdUseCase,
+                              CurtirBarbeiroUseCase curtirBarbeiroUseCase) {
         this.barbeiroMapper = barbeiroMapper;
         this.cadastrarBarbeiroUseCase = cadastrarBarbeiroUseCase;
         this.buscarBarbeiroPorIdUseCase = buscarBarbeiroPorIdUseCase;
         this.listarTodosBarbeirosUseCase = listarTodosBarbeirosUseCase;
         this.atualizarBarbeiroPorIdUseCase = atualizarBarbeiroPorIdUseCase;
         this.deletarBarbeiroPorIdUseCase = deletarBarbeiroPorIdUseCase;
+        this.curtirBarbeiroUseCase = curtirBarbeiroUseCase;
     }
 
     @GetMapping
@@ -72,5 +75,11 @@ public class BarbeiroController {
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         deletarBarbeiroPorIdUseCase.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/curtir")
+    public ResponseEntity<BarbeiroResponseDto> curtir(@PathVariable Long id) {
+        Barbeiro barbeiro = curtirBarbeiroUseCase.execute(id);
+        return ResponseEntity.ok(barbeiroMapper.toResponse(barbeiro));
     }
 }

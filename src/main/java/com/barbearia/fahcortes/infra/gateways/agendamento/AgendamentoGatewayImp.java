@@ -56,6 +56,16 @@ public class AgendamentoGatewayImp implements AgendamentoGateway {
 
     @Override
     @Transactional
+    public void deletar(Long id) {
+        if (!agendamentoRepository.existsById(id)) {
+            throw new EntidadeNaoEncontradaException(
+                    "Não foi possível remover o agendamento com id " + id + ". Nenhum agendamento encontrado com esse id.");
+        }
+        agendamentoRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
     public Agendamento cancelar(Long id) {
         AgendamentoEntity entity = agendamentoRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(

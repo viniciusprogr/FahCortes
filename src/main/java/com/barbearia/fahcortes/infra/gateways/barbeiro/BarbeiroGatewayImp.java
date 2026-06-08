@@ -7,6 +7,7 @@ import com.barbearia.fahcortes.infra.entities.BarbeiroEntity;
 import com.barbearia.fahcortes.infra.mapper.barbeiro.BarbeiroMapper;
 import com.barbearia.fahcortes.infra.persistence.BarbeiroRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,17 @@ public class BarbeiroGatewayImp implements BarbeiroGateway {
         if (barbeiro.getCurtidas() != null) entity.setCurtidas(barbeiro.getCurtidas());
         if (barbeiro.getAtivo() != null) entity.setAtivo(barbeiro.getAtivo());
 
+        return barbeiroMapper.toDomain(barbeiroRepository.save(entity));
+    }
+
+    @Override
+    @Transactional
+    public Barbeiro curtir(Long id) {
+        BarbeiroEntity entity = barbeiroRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        "Barbeiro com id " + id + " não encontrado. Verifique se o id informado está correto."));
+        int curtidasAtuais = entity.getCurtidas() != null ? entity.getCurtidas() : 0;
+        entity.setCurtidas(curtidasAtuais + 1);
         return barbeiroMapper.toDomain(barbeiroRepository.save(entity));
     }
 

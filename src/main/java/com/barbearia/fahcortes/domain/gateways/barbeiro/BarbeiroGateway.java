@@ -15,4 +15,6 @@ public interface BarbeiroGateway {
     Barbeiro atualizar(Barbeiro barbeiro, Long id);
 
     void deletar(Long id);
+
+    Barbeiro curtir(Long id);
 }

@@ -38,6 +38,7 @@ public class SecurityConfig {
 
                     req.requestMatchers(HttpMethod.GET, "/barbeiros/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/barbeiros").permitAll();
+                    req.requestMatchers(HttpMethod.PATCH, "/barbeiros/*/curtir").permitAll();
 
                     req.requestMatchers(HttpMethod.GET, "/produtos/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/produtos").permitAll();
