@@ -16,6 +16,7 @@ class TokenServiceTest {
     void setUp() {
         tokenService = new TokenService();
         ReflectionTestUtils.setField(tokenService, "secret", "test-secret-key-for-unit-tests");
+        ReflectionTestUtils.setField(tokenService, "expiration", 7200000L);
     }
 
     @Test

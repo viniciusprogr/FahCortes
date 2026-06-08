@@ -43,6 +43,7 @@ class AgendamentoControllerTest {
     @MockBean private BuscarAgendamentoPorIdUseCase buscarAgendamentoPorIdUseCase;
     @MockBean private ListarAgendamentosUseCase listarAgendamentosUseCase;
     @MockBean private CancelarAgendamentoUseCase cancelarAgendamentoUseCase;
+    @MockBean private DeletarAgendamentoPorIdUseCase deletarAgendamentoPorIdUseCase;
     @MockBean private TokenService tokenService;
     @MockBean private UsuarioDetailService usuarioDetailService;
     @MockBean private UsuarioRepository usuarioRepository;

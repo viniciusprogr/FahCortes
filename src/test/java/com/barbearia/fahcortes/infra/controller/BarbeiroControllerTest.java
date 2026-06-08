@@ -52,6 +52,8 @@ class BarbeiroControllerTest {
     @MockBean
     private DeletarBarbeiroPorIdUseCase deletarBarbeiroPorIdUseCase;
     @MockBean
+    private CurtirBarbeiroUseCase curtirBarbeiroUseCase;
+    @MockBean
     private TokenService tokenService;
     @MockBean
     private UsuarioDetailService usuarioDetailService;
